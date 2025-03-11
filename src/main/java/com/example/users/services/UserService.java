@@ -8,10 +8,12 @@ import com.example.users.model.Person;
 import com.example.users.model.Role;
 import com.example.users.model.User;
 import com.example.users.repositories.PersonRepository;
+import com.example.users.repositories.RoleRepository;
 import com.example.users.repositories.UserRepository;
 import com.example.users.security.authentication.JwtTokenService;
 import com.example.users.security.config.SecurityConfiguration;
 import com.example.users.security.userDetail.UserDetailImplementation;
+import com.example.users.utils.RoleName;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +37,8 @@ public class UserService {
     private JwtTokenService jwtTokenService;
     @Autowired
     private SecurityConfiguration securityConfiguration;
+    @Autowired
+    RoleRepository roleRepository;
 
     public List<UserRequestDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
@@ -54,7 +58,23 @@ public class UserService {
             User user = new User();
             user.setEmail(userData.email());
             user.setPassword(securityConfiguration.passwordEncoder().encode(userData.password()));
-            user.setRoles(List.of(new Role(userData.role())));
+            List<Role> roles = userData.roles().stream()
+                    .map(roleName -> {
+                        try {
+                            Role role = roleRepository.findByName(RoleName.valueOf(roleName.toUpperCase()))
+                                    .orElseGet(() -> {
+                                        Role newRole = new Role(RoleName.valueOf(roleName.toUpperCase()));
+                                        roleRepository.save(newRole);
+                                        return newRole;
+                                    });
+                            return role;
+                        } catch (IllegalArgumentException e) {
+                            throw new RuntimeException("Invalid role name: " + roleName);
+                        }
+                    })
+                    .collect(Collectors.toList());
+
+            user.setRoles(roles);
             user = userRepository.save(user);
 
             Person person = new Person();
