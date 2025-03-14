@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.users.security.userDetail.UserDetailImplementation;
 import com.example.users.security.userDetail.UserDetailServiceImplementation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -13,7 +14,8 @@ import java.time.temporal.ChronoUnit;
 
 @Service
 public class JwtTokenService {
-    private static final String SECRET_KEY = "4Z^XrroxR@asd2dWxqf$mTTKwW$!@#qGr4P";
+    @Value("${API_KEY}")
+    private String SECRET_KEY;
 
     private static final String ISSUER = "sac-api";
 
