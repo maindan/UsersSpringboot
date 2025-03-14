@@ -64,6 +64,7 @@ public class SecurityConfiguration {
                                 "/v3/api-docs/**",
                                 "/webjars/**"
                         ).permitAll()
+                        .requestMatchers("api/user").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

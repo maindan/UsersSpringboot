@@ -49,7 +49,7 @@ public class UserAuthFilter extends OncePerRequestFilter {
                 UserDetailImplementation userDetails = new UserDetailImplementation(user);
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
-
+                System.out.println("User Roles: " + userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
                 throw new RuntimeException("Token not found");
@@ -57,6 +57,10 @@ public class UserAuthFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             handlerExceptionResolver.resolveException(request, response, null, e);
         }
+
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        filterChain.doFilter(request, response);
     }
 
     private String recoveryToken(HttpServletRequest request) {

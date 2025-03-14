@@ -1,6 +1,5 @@
 package com.example.users.controller;
 
-import com.example.users.DTO.User.UserCreateDTO;
 import com.example.users.DTO.User.UserRequestDTO;
 import com.example.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +20,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserRequestDTO getUserById(@RequestParam Long id) throws Exception {
+    public UserRequestDTO getUserById(@PathVariable Long id) throws Exception {
         return userService.getUserById(id);
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteUserById(@PathVariable Long id) throws Exception {
         userService.deleteUserById(id);
         return ResponseEntity.ok().build();

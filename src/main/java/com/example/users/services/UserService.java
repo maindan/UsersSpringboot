@@ -42,6 +42,7 @@ public class UserService {
 
     public List<UserRequestDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
+        System.out.println("Usuários encontrados: " + users);
         return this.convertUserList(users);
     }
 
@@ -97,10 +98,10 @@ public class UserService {
 
     public void deleteUserById(Long id) throws Exception {
         Optional<User> user = userRepository.findById(id);
-        if(user.isPresent()) {
-            userRepository.deleteById(id);
+        if(user.isEmpty()) {
+            throw new Exception("User not found");
         }
-        throw new Exception("User not found");
+        userRepository.deleteById(id);
     }
 
     private List<UserRequestDTO> convertUserList(List<User> users) {
