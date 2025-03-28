@@ -36,19 +36,6 @@ public class SecurityConfiguration {
         this.userDetailServiceImplementation = userDetailServiceImplementation;
     }
 
-    public static final String [] ENDPOINTS_WITH_AUTH_NOT_REQUIRED = {
-            "/auth",
-            "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/swagger-resources/**",
-            "/v3/api-docs/**",
-            "/webjars/**"
-    };
-
-    public static final String [] ENDPOINTS_ADMIN = {
-            "/users/test/administrator"
-    };
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
